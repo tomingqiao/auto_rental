@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coder.rental.mapper.PermissionMapper">
+    <select id="selectPermissionListByUserId"
+            resultType="com.coder.rental.entity.Permission"
+            parameterType="com.coder.rental.entity.User">
+        select distinct
+        sp.id,
+        sp.permission_label,
+        sp.pid,
+        sp.parent_label,
+        sp.permission_code,
+        sp.route_path,
+        sp.route_name,
+        sp.route_url,
+        sp.permission_type,
+        sp.order_num,
+        sp.icon
+        from sys_user su
+        left join sys_user_role sur on su.id = sur.user_id
+        left join sys_role sr on sr.id = sur.role_id
+        left join sys_role_permission srp on srp.role_id = sr.id
+        left join sys_permission sp on sp.id = srp.permission_id
+        where su.id = #{id}
+        order by sp.id,sp.order_num
+    </select>
+
+</mapper>
