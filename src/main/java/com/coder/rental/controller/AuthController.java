@@ -17,9 +17,11 @@ import com.coder.rental.vo.TokenVo;
 import com.coder.rental.vo.UserInfoVo;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -70,15 +72,19 @@ public class AuthController {
         return Result.success(tokenVo).setMessage("token刷新成功");
     }
 
-    @GetMapping("/info")
+    @GetMapping("/getInfo")
     public Result getUserInfo(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication==null){
             return Result.fail().setMessage("认证信息为空");
         }
         User user = (User) authentication.getPrincipal();
-        List<String> list=userService.selectRoleNameByUserId(user.getId());
-        Object[] array = list.toArray();
+//        List<String> list=userService.selectRoleNameByUserId(user.getId());
+//        Object[] array = list.toArray();
+        List<Permission> permissionList = user.getPermissionList();
+        Object[] array = permissionList.stream().filter(Objects::nonNull)
+                .map(Permission::getPermissionCode)
+                .toArray();
         UserInfoVo userInfoVo=new UserInfoVo(user.getId(), user.getUsername(), user.getAvatar(),
                 user.getNickname(), array);
         return Result.success(userInfoVo).setMessage("获取用户信息成功");
@@ -95,5 +101,22 @@ public class AuthController {
         permissionList.removeIf(permission -> Objects.equals(permission.getPermissionType(), 2));
         List<RouteVo> routeVoList= RouteTreeUtils.buildRouteTree(permissionList,0);
         return Result.success(routeVoList).setMessage("获取用户菜单成功");
+    }
+
+    @PostMapping("/logout")
+    public Result logout(HttpServletRequest request, HttpServletResponse response){
+        //获取token
+        String token=request.getHeader("token");
+        if (StrUtil.isEmpty(token)){
+            token=request.getParameter("token");
+        }
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication!=null){
+            redisUtils.del("token:"+token);
+            SecurityContextLogoutHandler handler=new SecurityContextLogoutHandler();
+            handler.logout(request,response,authentication);
+            return Result.success().setMessage("登出成功");
+        }
+        return Result.fail().setMessage("登出失败");
     }
 }
