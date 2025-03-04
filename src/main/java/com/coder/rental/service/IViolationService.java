@@ -1,5 +1,6 @@
 package com.coder.rental.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.coder.rental.entity.Violation;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -13,4 +14,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IViolationService extends IService<Violation> {
 
+    Page<Violation> searchByPage(int start, int size, Violation violation);
+
+    boolean delete(String ids);
 }

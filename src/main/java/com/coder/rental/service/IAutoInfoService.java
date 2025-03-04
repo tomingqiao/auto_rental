@@ -1,5 +1,6 @@
 package com.coder.rental.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.coder.rental.entity.AutoInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -13,4 +14,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IAutoInfoService extends IService<AutoInfo> {
 
+    Page<AutoInfo> search(int start, int size, AutoInfo autoInfo);
+
+    boolean delete(String ids);
+
+    Integer getIdByNum(String autoNum);
 }

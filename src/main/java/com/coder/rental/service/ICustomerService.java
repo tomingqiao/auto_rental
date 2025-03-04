@@ -1,5 +1,6 @@
 package com.coder.rental.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.coder.rental.entity.Customer;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -13,4 +14,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ICustomerService extends IService<Customer> {
 
+    Page<Customer> searchByPage(int start, int size, Customer customer);
+
+    boolean delete(String ids);
 }

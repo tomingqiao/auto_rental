@@ -22,7 +22,18 @@
         left join sys_role_permission srp on srp.role_id = sr.id
         left join sys_permission sp on sp.id = srp.permission_id
         where su.id = #{id}
+        and sr.deleted = 0
+        and sp.deleted = 0
+        and su.deleted = 0
         order by sp.id,sp.order_num
+    </select>
+    <select id="selectPermissionListByRoleId" resultType="com.coder.rental.entity.Permission">
+        select *
+        from sys_permission p
+        left join sys_role_permission rp on rp.permission_id=p.id
+        where rp.role_id=#{roleId}
+        and p.deleted = 0
+        order by p.order_num
     </select>
 
 </mapper>

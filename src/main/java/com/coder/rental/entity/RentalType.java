@@ -1,8 +1,7 @@
 package com.coder.rental.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import io.swagger.annotations.ApiModel;
@@ -36,14 +35,22 @@ public class RentalType implements Serializable {
     private String typeName;
 
     @ApiModelProperty("享受折扣")
-    private Double typeDiscout;
+    private Double typeDiscount;
+
+    @TableField(exist = false)
+    private Double lowDiscount;
+
+    @TableField(exist = false)
+    private Double highDiscount;
 
     @ApiModelProperty("备注")
     private String remark;
 
+    @TableField(fill= FieldFill.INSERT)
     @ApiModelProperty("创建时间")
     private LocalDateTime createTime;
 
+    @TableField(fill= FieldFill.INSERT_UPDATE)
     @ApiModelProperty("修改时间")
     private LocalDateTime updateTime;
 

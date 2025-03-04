@@ -2,6 +2,7 @@ package com.coder.rental.utils;
 
 import com.coder.rental.entity.Permission;
 import com.coder.rental.vo.RouteVo;
+import org.springframework.beans.BeanUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,5 +31,19 @@ public class RouteTreeUtils {
                     routeVoList.add(routeVo);
                 });
         return routeVoList;
+    }
+
+    public static List<Permission> buildMenuTree(List<Permission> List,int pid) {
+        List<Permission> menuList=new ArrayList<>();
+        Optional.ofNullable(List).orElse(new ArrayList<>())
+                .stream()
+                .filter(permission -> permission!=null && permission.getPid() == pid)
+                .forEach(permission -> {
+                    Permission menu=new Permission();
+                    BeanUtils.copyProperties(permission,menu);
+                    menu.setChildren(buildMenuTree(List,permission.getId()));
+                    menuList.add(menu);
+                });
+        return menuList;
     }
 }

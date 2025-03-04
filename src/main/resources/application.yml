@@ -38,3 +38,7 @@ encoder:
 
 request:
   login-url: /rental/user/login
+
+auto:
+  info:
+    maintain-mileage: 5000

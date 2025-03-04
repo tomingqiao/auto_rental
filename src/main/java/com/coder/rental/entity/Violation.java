@@ -1,12 +1,12 @@
 package com.coder.rental.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.models.auth.In;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -35,8 +35,17 @@ public class Violation implements Serializable {
     @ApiModelProperty("车辆id")
     private Integer autoId;
 
+    @ApiModelProperty("车牌号码")
+    private String autoNum;
+
     @ApiModelProperty("违章时间")
     private LocalDateTime violationTime;
+
+    @TableField(exist = false)
+    private LocalDateTime lowViolationTime;
+
+    @TableField(exist = false)
+    private LocalDateTime highViolationTime;
 
     @ApiModelProperty("违章事由")
     private String reason;
@@ -50,13 +59,21 @@ public class Violation implements Serializable {
     @ApiModelProperty("罚款")
     private Integer fine;
 
+    @TableField(exist = false)
+    private Integer lowFine;
+
+    @TableField(exist = false)
+    private Integer highFine;
+
     @ApiModelProperty("是否处理 0未处理 1已处理")
-    private Boolean status;
+    private Integer status;
 
     @ApiModelProperty("创建时间")
+    @TableField(fill= FieldFill.INSERT)
     private LocalDateTime createTime;
 
     @ApiModelProperty("修改时间")
+    @TableField(fill=FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
     @ApiModelProperty("是否删除")

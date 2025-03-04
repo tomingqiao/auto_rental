@@ -3,6 +3,7 @@ package com.coder.rental.entity;
 import com.baomidou.mybatisplus.annotation.*;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -66,7 +67,7 @@ public class User implements Serializable , UserDetails {
     private String deptName;
 
     @ApiModelProperty("性别")
-    private Boolean gender;
+    private Integer gender;
 
     @ApiModelProperty("联系电话")
     private String phone;
@@ -78,15 +79,15 @@ public class User implements Serializable , UserDetails {
     private String avatar;
 
     @ApiModelProperty("是否管理员")
-    private Boolean isAdmin;
+    private Integer isAdmin;
 
     @ApiModelProperty("创建时间")
     @TableField(fill = FieldFill.INSERT)
-    private String createTime;
+    private LocalDateTime createTime;
 
     @ApiModelProperty("修改时间")
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    private String updateTime;
+    private LocalDateTime updateTime;
 
     @ApiModelProperty("是否删除")
     private Boolean deleted;

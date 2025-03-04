@@ -1,8 +1,7 @@
 package com.coder.rental.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -49,14 +48,25 @@ public class Customer implements Serializable {
     private String idNum;
 
     @ApiModelProperty("客户状态 0黑名单 1白名单")
-    private Boolean status;
+    private Integer status;
 
     @ApiModelProperty("创建时间")
+    @TableField(fill= FieldFill.INSERT)
     private LocalDateTime createTime;
 
     @ApiModelProperty("修改时间")
+    @TableField(fill= FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
     @ApiModelProperty("是否删除")
     private Boolean deleted;
+
+    @ApiModelProperty("性别 0女 1男")
+    private Integer gender;
+
+    @TableField(exist = false)
+    private Integer lowAge;
+
+    @TableField(exist = false)
+    private Integer highAge;
 }

@@ -1,5 +1,7 @@
 package com.coder.rental.mapper;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.coder.rental.entity.AutoInfo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
@@ -13,4 +15,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface AutoInfoMapper extends BaseMapper<AutoInfo> {
 
+    Page<AutoInfo> searchByPage(Page<AutoInfo> page, AutoInfo autoInfo);
 }

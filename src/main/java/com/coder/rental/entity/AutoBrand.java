@@ -1,6 +1,7 @@
 package com.coder.rental.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
@@ -32,11 +33,14 @@ public class AutoBrand implements Serializable {
     private Integer id;
 
     @ApiModelProperty("厂商id")
-    private String mid;
+    private Integer mid;
 
     @ApiModelProperty("品牌名称")
     private String brandName;
 
     @ApiModelProperty("是否删除")
     private Boolean deleted;
+
+    @TableField(exist = false)
+    private String makerName;
 }
