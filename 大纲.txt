@@ -1,7 +1,7 @@
 1.项目简述
 2.项目需求分析
 3.数据库表结果设计
-	"auto_brand","auto_info","auto_maker",
+    "auto_brand","auto_info","auto_maker",
     "busi_customer","busi_maintain","busi_order",
     "busi_rental_type","busi_violation",
     "sys_dept","sys_permission","sys_role",
