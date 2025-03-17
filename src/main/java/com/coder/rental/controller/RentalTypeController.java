@@ -43,4 +43,10 @@ public class RentalTypeController {
     public Result delete(@PathVariable String ids){
         return rentalTypeService.delete(ids)? Result.success() : Result.fail();
     }
+
+    @GetMapping
+    public Result selectAll(){
+        List<RentalType> list = rentalTypeService.list();
+        return Result.success(list);
+    }
 }

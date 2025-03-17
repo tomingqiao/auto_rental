@@ -1,5 +1,6 @@
 package com.coder.rental.mapper;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.coder.rental.entity.Order;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
@@ -13,4 +14,9 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface OrderMapper extends BaseMapper<Order> {
 
+    Page<Order> selectUnfinished(Page<Order> page, Order order);
+
+    Page<Order> searchByPage(Page<Order> page, Order order);
+
+    long countViolation(Integer autoId);
 }

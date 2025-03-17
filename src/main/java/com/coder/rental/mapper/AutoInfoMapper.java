@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.coder.rental.entity.AutoInfo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
+import java.util.List;
+
 /**
  * <p>
  *  Mapper 接口
@@ -16,4 +18,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 public interface AutoInfoMapper extends BaseMapper<AutoInfo> {
 
     Page<AutoInfo> searchByPage(Page<AutoInfo> page, AutoInfo autoInfo);
+
+    List<AutoInfo> toBeMaintain();
 }

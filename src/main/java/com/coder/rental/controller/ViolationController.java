@@ -38,6 +38,7 @@ public class ViolationController {
 
     @PutMapping
     public Result update(@RequestBody Violation violation){
+        violation.setAutoId(autoInfoService.getIdByNum(violation.getAutoNum()));
         return violationService.updateById(violation)?Result.success():Result.fail();
     }
 

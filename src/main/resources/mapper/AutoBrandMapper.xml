@@ -3,16 +3,15 @@
 <mapper namespace="com.coder.rental.mapper.AutoBrandMapper">
     <select id="searchByPage" resultType="com.coder.rental.entity.AutoBrand">
         select m.name makerName,b.id,b.brand_name,b.mid,b.deleted
-        from auto_brand b, auto_maker m
-        where b.mid = m.id
+        FROM auto_brand b
+        INNER JOIN auto_maker m ON b.mid = m.id AND m.deleted = 0
+        where b.deleted = 0
         <if test="autoBrand.mid!=null">
             and b.mid = #{autoBrand.mid}
         </if>
         <if test="autoBrand.brandName != null and autoBrand.brandName != ''">
             and b.brand_name like concat('%',#{autoBrand.brandName},'%')
         </if>
-        and b.deleted = 0
-        and m.deleted = 0
         order by m.order_letter
     </select>
 </mapper>

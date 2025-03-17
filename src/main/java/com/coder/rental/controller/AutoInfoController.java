@@ -1,5 +1,6 @@
 package com.coder.rental.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.coder.rental.entity.AutoInfo;
 import com.coder.rental.service.IAutoInfoService;
@@ -53,5 +54,16 @@ public class AutoInfoController {
     @DeleteMapping("/{ids}")
     public Result delete(@PathVariable String ids){
         return autoInfoService.delete(ids)?Result.success():Result.fail();
+    }
+
+    @PostMapping("/exist")
+    public Result existAutoNum(@RequestBody AutoInfo autoInfo){
+        long autoNum1 = autoInfoService.count(new QueryWrapper<AutoInfo>().eq("auto_num", autoInfo.getAutoNum()));
+        return autoNum1>0?Result.success().setMessage("存在该车牌号码"):Result.success().setMessage("不存在该车牌号码");
+    }
+
+    @GetMapping("/toBeMaintain")
+    public Result toBeMaintain(){
+        return Result.success(autoInfoService.toBeMaintain());
     }
 }

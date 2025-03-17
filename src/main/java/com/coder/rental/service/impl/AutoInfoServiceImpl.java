@@ -47,4 +47,16 @@ public class AutoInfoServiceImpl extends ServiceImpl<AutoInfoMapper, AutoInfo> i
         queryWrapper.eq("auto_num", autoNum);
         return baseMapper.selectOne(queryWrapper).getId();
     }
+
+    @Override
+    public AutoInfo getByAutoNum(String autoNum) {
+        QueryWrapper<AutoInfo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("auto_num", autoNum);
+        return baseMapper.selectOne(queryWrapper);
+    }
+
+    @Override
+    public List<AutoInfo> toBeMaintain() {
+        return baseMapper.toBeMaintain();
+    }
 }

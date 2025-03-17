@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.coder.rental.entity.AutoInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务类
@@ -19,4 +21,8 @@ public interface IAutoInfoService extends IService<AutoInfo> {
     boolean delete(String ids);
 
     Integer getIdByNum(String autoNum);
+
+    AutoInfo getByAutoNum(String autoNum);
+
+    List<AutoInfo> toBeMaintain();
 }

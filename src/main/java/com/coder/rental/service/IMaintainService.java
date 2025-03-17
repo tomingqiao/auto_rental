@@ -1,7 +1,10 @@
 package com.coder.rental.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.coder.rental.entity.Maintain;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +15,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2025-01-19
  */
 public interface IMaintainService extends IService<Maintain> {
+
+    Page<Maintain> search(Page<Maintain> page, Maintain maintain);
+
+    boolean delete(String ids);
 
 }

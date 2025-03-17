@@ -1,11 +1,12 @@
 package com.coder.rental.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -36,8 +37,20 @@ public class Maintain implements Serializable {
     @ApiModelProperty("车辆id")
     private Integer autoId;
 
+    @ApiModelProperty("车牌号码")
+    private String autoNum;
+
     @ApiModelProperty("维保时间")
-    private LocalDate maintainTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime maintainTime;
+
+    @TableField(exist = false)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime lowMaintainTime;
+
+    @TableField(exist = false)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime highMaintainTime;
 
     @ApiModelProperty("维保地点")
     private String location;
@@ -48,10 +61,18 @@ public class Maintain implements Serializable {
     @ApiModelProperty("维保费用")
     private Integer cost;
 
+    @TableField(exist = false)
+    private Integer lowCost;
+
+    @TableField(exist = false)
+    private Integer highCost;
+
     @ApiModelProperty("创建时间")
+    @TableField(fill= FieldFill.INSERT)
     private LocalDateTime createTime;
 
     @ApiModelProperty("更新时间")
+    @TableField(fill=FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
     @ApiModelProperty("是否删除")

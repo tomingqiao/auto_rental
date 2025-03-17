@@ -5,11 +5,9 @@
     <select id="searchByPage" resultType="com.coder.rental.entity.AutoInfo" parameterType="com.coder.rental.entity.AutoInfo">
         select ai.*,am.name makerName,ab.brand_name
         from auto_info ai
-        left join auto_maker am on ai.maker_id=am.id
-        left join auto_brand ab on ai.brand_id=ab.id
+        INNER JOIN auto_maker am ON ai.maker_id = am.id AND am.deleted = 0
+        INNER JOIN auto_brand ab ON ai.brand_id = ab.id AND ab.deleted = 0
         where ai.deleted=0
-        and am.deleted=0
-        and ab.deleted=0
         <if test="autoInfo.autoNum!=null and autoNum!=''">
             and ai.auto_num like concat('%',#{autoInfo.autoNum},'%')
         </if>
@@ -37,5 +35,12 @@
         <if test="autoInfo.highRent!=null">
             and ai.rent &lt;= #{autoInfo.highRent}
         </if>
+    </select>
+    <select id="toBeMaintain" resultType="com.coder.rental.entity.AutoInfo">
+        select *
+        from auto_info
+        where deleted=0
+        and expected_num &gt; actual_num
+        order by auto_num
     </select>
 </mapper>

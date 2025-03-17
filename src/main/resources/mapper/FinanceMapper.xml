@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coder.rental.mapper.FinanceMapper">
+
+    <select id="countDayRental" resultType="com.coder.rental.vo.FinanceNumDayVo">
+        select hour(rental_time) hours,count(id) rental_num
+        from busi_order bo
+        where bo.deleted=0
+        and date(rental_time)=#{date}
+        group by hours
+    </select>
+    <select id="countDayReturn" resultType="com.coder.rental.vo.FinanceNumDayVo">
+        select hour(return_time) hours,count(id) return_num
+        from busi_order bo
+        where bo.deleted=0
+        and date(return_time)=#{date}
+        group by hours
+    </select>
+    <select id="countDay" resultType="com.coder.rental.vo.FinanceNumDayVo">
+        SELECT
+            hours.hour AS hours,
+            IFNULL(rental.rental_num, 0) AS rental_num,
+            IFNULL(return.return_num, 0) AS return_num
+        FROM
+            (SELECT 0 AS hour UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4
+                UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9
+                UNION SELECT 10 UNION SELECT 11 UNION SELECT 12 UNION SELECT 13 UNION SELECT 14
+                UNION SELECT 15 UNION SELECT 16 UNION SELECT 17 UNION SELECT 18 UNION SELECT 19
+                UNION SELECT 20 UNION SELECT 21 UNION SELECT 22 UNION SELECT 23) AS hours
+        LEFT JOIN
+            (SELECT
+                HOUR(rental_time) AS hour,
+                COUNT(id) AS rental_num
+                FROM busi_order
+                WHERE deleted = 0
+                AND DATE(rental_time) = #{date}
+                GROUP BY hour) AS rental
+            ON hours.hour = rental.hour
+        LEFT JOIN
+            (SELECT
+                HOUR(return_time) AS hour,
+                COUNT(id) AS return_num
+                FROM busi_order
+                WHERE deleted = 0
+                AND DATE(return_time) = #{date}
+                GROUP BY hour) AS `return`
+            ON hours.hour = `return`.hour
+        ORDER BY hours.hour;
+    </select>
+    <select id="countDayCost" resultType="com.coder.rental.vo.FinanceCostVo">
+        SELECT
+            SUM(CASE WHEN deposit_return = 1 THEN deposit ELSE 0 END) AS deposit,
+            SUM(rent_payable) AS rentPayable,
+            SUM(rent_actual) AS rentActual
+            FROM busi_order
+            WHERE DATE(return_time) = #{date}
+            AND deleted = 0
+    </select>
+    <select id="countMonth" resultType="com.coder.rental.vo.FinanceNumMonthVo">
+        SELECT
+            days.day AS days,
+            IFNULL(rental.rental_num, 0) AS rental_num,
+            IFNULL(return.return_num, 0) AS return_num
+        FROM
+            (SELECT 1 AS day UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5
+                UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10
+                UNION SELECT 11 UNION SELECT 12 UNION SELECT 13 UNION SELECT 14 UNION SELECT 15
+                UNION SELECT 16 UNION SELECT 17 UNION SELECT 18 UNION SELECT 19 UNION SELECT 20
+                UNION SELECT 21 UNION SELECT 22 UNION SELECT 23 UNION SELECT 24 UNION SELECT 25
+                UNION SELECT 26 UNION SELECT 27 UNION SELECT 28 UNION SELECT 29 UNION SELECT 30
+                UNION SELECT 31) AS days
+        LEFT JOIN
+            (SELECT
+                DAY(rental_time) AS day,
+                COUNT(id) AS rental_num
+                FROM busi_order
+                WHERE deleted = 0
+                AND YEAR(rental_time) = YEAR(#{date})
+                AND MONTH(rental_time) = MONTH(#{date})
+                GROUP BY day) AS rental
+            ON days.day = rental.day
+        LEFT JOIN
+            (SELECT
+                DAY(return_time) AS day,
+                COUNT(id) AS return_num
+                FROM busi_order
+                WHERE deleted = 0
+                AND YEAR(return_time) = YEAR(#{date})
+                AND MONTH(return_time) = MONTH(#{date})
+                GROUP BY day) AS `return`
+            ON days.day = `return`.day
+        WHERE days.day &lt;= DAY(LAST_DAY(#{date}))
+        ORDER BY days.day;
+    </select>
+    <select id="countMonthCost" resultType="com.coder.rental.vo.FinanceCostVo">
+        SELECT
+            SUM(CASE WHEN deposit_return = 1 THEN deposit ELSE 0 END) AS deposit,
+            SUM(rent_payable) AS rentPayable,
+            SUM(rent_actual) AS rentActual
+        FROM busi_order
+        WHERE YEAR(return_time) = YEAR(#{date})
+            AND MONTH(return_time) = MONTH(#{date})
+            AND deleted = 0
+    </select>
+</mapper>

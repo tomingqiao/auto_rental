@@ -17,22 +17,19 @@
         sp.order_num,
         sp.icon
         from sys_user su
-        left join sys_user_role sur on su.id = sur.user_id
-        left join sys_role sr on sr.id = sur.role_id
-        left join sys_role_permission srp on srp.role_id = sr.id
-        left join sys_permission sp on sp.id = srp.permission_id
+        INNER join sys_user_role sur on su.id = sur.user_id
+        INNER join sys_role sr on sr.id = sur.role_id and sr.deleted = 0
+        INNER join sys_role_permission srp on srp.role_id = sr.id
+        INNER join sys_permission sp on sp.id = srp.permission_id and sp.deleted = 0
         where su.id = #{id}
-        and sr.deleted = 0
-        and sp.deleted = 0
         and su.deleted = 0
-        order by sp.id,sp.order_num
+        order by sp.order_num,sp.id
     </select>
     <select id="selectPermissionListByRoleId" resultType="com.coder.rental.entity.Permission">
-        select *
+        select p.*
         from sys_permission p
-        left join sys_role_permission rp on rp.permission_id=p.id
-        where rp.role_id=#{roleId}
-        and p.deleted = 0
+        INNER join sys_role_permission rp on rp.permission_id=p.id and rp.role_id=#{roleId}
+        where p.deleted = 0
         order by p.order_num
     </select>
 

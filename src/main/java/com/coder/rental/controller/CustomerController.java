@@ -40,4 +40,9 @@ public class CustomerController {
     public Result delete(@PathVariable String ids) {
         return customerService.delete(ids)?Result.success():Result.fail();
     }
+
+    @GetMapping("/{tel}")
+    public Result selectByTel(@PathVariable String tel) {
+        return Result.success(customerService.selectByTel(tel));
+    }
 }

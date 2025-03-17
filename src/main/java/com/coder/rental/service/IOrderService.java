@@ -1,5 +1,6 @@
 package com.coder.rental.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.coder.rental.entity.Order;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -13,4 +14,13 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IOrderService extends IService<Order> {
 
+    boolean add(Order order);
+
+    Page<Order> selectUnfinished(int start, int size, Order order);
+
+    boolean updateOrder(Order order);
+
+    Page<Order> search(Page<Order> page, Order order);
+
+    long returnDeposit(Integer autoId);
 }

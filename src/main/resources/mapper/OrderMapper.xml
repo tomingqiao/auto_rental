@@ -1,5 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coder.rental.mapper.OrderMapper">
+    <sql id="search">
+        select bo.*,bc.name customerName,bc.tel customerTel,ai.auto_num,brt.type_name,brt.type_discount
+        from busi_order bo
+        INNER JOIN auto_info ai ON bo.auto_id = ai.id AND ai.deleted = 0
+        INNER JOIN busi_customer bc ON bo.customer_id = bc.id AND bc.deleted = 0
+        INNER JOIN busi_rental_type brt ON bo.type_id = brt.id AND brt.deleted = 0
+        WHERE bo.deleted = 0
+        <if test="order.orderNum!=null and order.orderNum!=''">
+            and bo.order_num  like concat('%',#{order.orderNum},'%')
+        </if>
+        <if test="order.autoNum!=null and order.autoNum!=''">
+            and ai.auto_num  like concat('%',#{order.autoNum},'%')
+        </if>
+        <if test="order.customerName!=null and order.customerName!=''">
+            and bc.name like concat('%',#{order.customerName},'%')
+        </if>
+        <if test="order.customerTel!=null and order.customerTel!=''">
+            and bc.tel like concat('%',#{order.customerTel},'%')
+        </if>
+    </sql>
 
+    <select id="selectUnfinished" resultType="com.coder.rental.entity.Order"
+    parameterType="com.coder.rental.entity.Order">
+        <include refid="search"/>
+        and bo.return_time is null
+        order by bo.rental_time
+    </select>
+    <select id="searchByPage" resultType="com.coder.rental.entity.Order"
+    parameterType="com.coder.rental.entity.Order">
+        <include refid="search"/>
+        order by bo.rental_time desc
+    </select>
+    <select id="countViolation" resultType="java.lang.Long">
+        SELECT COUNT(*)
+        FROM busi_violation bv
+        INNER JOIN busi_order bo ON bv.auto_id = bo.auto_id
+        AND bo.deleted = 0
+        AND bv.violation_time BETWEEN bo.rental_time AND bo.return_time
+        WHERE bv.deleted = 0
+        AND bv.status = 0
+        AND bv.auto_id = #{autoId}
+    </select>
 </mapper>
