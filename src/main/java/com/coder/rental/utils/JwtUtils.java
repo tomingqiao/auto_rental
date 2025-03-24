@@ -14,7 +14,7 @@ public class JwtUtils {
     //密钥
     public static final String SECRET_KEY = "tomingqiao";
     //过期时间
-    public static final long EXPIRE_TIME = 1000L*60*30;
+    public static final long EXPIRE_TIME = 1000L*60*60*24;
 
     public static String createToken(Map<String,Object> payload){
         DateTime now = DateTime.now();

@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.Map;
 
 @Data
 @AllArgsConstructor
@@ -19,4 +20,6 @@ public class UserInfoVo implements Serializable {
     private String introduction;
 
     private Object[] roles;
+
+    private Map<String,String> iconMap;
 }

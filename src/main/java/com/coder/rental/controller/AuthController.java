@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/rental/auth/")
@@ -79,15 +80,26 @@ public class AuthController {
             return Result.fail().setMessage("认证信息为空");
         }
         User user = (User) authentication.getPrincipal();
-//        List<String> list=userService.selectRoleNameByUserId(user.getId());
-//        Object[] array = list.toArray();
         List<Permission> permissionList = user.getPermissionList();
         Object[] array = permissionList.stream().filter(Objects::nonNull)
                 .map(Permission::getPermissionCode)
                 .toArray();
-        UserInfoVo userInfoVo=new UserInfoVo(user.getId(), user.getUsername(), user.getAvatar(),
-                user.getNickname(), array);
+
+        // 构建 icon 列表
+        UserInfoVo userInfoVo = getUserInfoVo(permissionList, user, array);
         return Result.success(userInfoVo).setMessage("获取用户信息成功");
+    }
+
+    private static UserInfoVo getUserInfoVo(List<Permission> permissionList, User user, Object[] array) {
+        Map<String, String> iconMap = permissionList.stream()
+                .collect(Collectors.toMap(
+                        Permission::getPermissionCode,
+                        Permission::getIcon,
+                        (existing, replacement) -> existing // 处理重复键的情况，保留现有值
+                ));
+
+        return new UserInfoVo(user.getId(), user.getUsername()
+                , user.getAvatar(), user.getNickname(), array, iconMap);
     }
 
     @GetMapping("/menuList")
