@@ -57,6 +57,7 @@ public class UserController {
     }
 
     @PutMapping
+    @PreAuthorize("hasAuthority('sys:user:edit')")
     public Result update(@RequestBody User user){
         if(userService.selectByUsername(user.getUsername())!=null){
             return Result.fail().setMessage("用户名已存在");
@@ -66,16 +67,19 @@ public class UserController {
     }
 
     @DeleteMapping("/{ids}")
+    @PreAuthorize("hasAuthority('sys:user:delete')")
     public Result delete(@PathVariable String ids){
         return userService.delete(ids)?Result.success():Result.fail();
     }
 
     @GetMapping("/role/{id}")
+    @PreAuthorize("hasAuthority('sys:user:bindRole')")
     public Result selectRoleIdByUserId(@PathVariable Integer id){
         return Result.success(userService.selectRoleIdByUserId(id));
     }
 
     @GetMapping("/bind/{userId}/{roleIds}")
+    @PreAuthorize("hasAuthority('sys:user:bindRole')")
     public Result bindRole(@PathVariable Integer userId, @PathVariable String roleIds){
         List<Integer> list = Arrays.stream(roleIds.split(",")).map(Integer::parseInt).toList();
         return userService.bindRole(userId, list)?Result.success():Result.fail();

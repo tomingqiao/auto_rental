@@ -12,6 +12,7 @@ import com.coder.rental.utils.Result;
 import jakarta.annotation.Resource;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -36,6 +37,7 @@ public class AutoBrandController {
     private IAutoBrandService autoBrandService;
 
     @PostMapping("/{start}/{size}")
+    @PreAuthorize("hasAuthority('auto:brand:select')")
     public Result search(@PathVariable int start, @PathVariable int size,
                          @RequestBody AutoBrand autoBrand) {
         Page<AutoBrand> page = new Page<>(start, size);
@@ -43,16 +45,19 @@ public class AutoBrandController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('auto:brand:add')")
     public Result save(@RequestBody AutoBrand autoBrand) {
         return autoBrandService.save(autoBrand)? Result.success() : Result.fail();
     }
 
     @PutMapping
+    @PreAuthorize("hasAuthority('auto:brand:edit')")
     public Result update(@RequestBody AutoBrand autoBrand) {
         return autoBrandService.updateById(autoBrand)? Result.success() : Result.fail();
     }
 
     @DeleteMapping("/{ids}")
+    @PreAuthorize("hasAuthority('auto:brand:delete')")
     public Result delete(@PathVariable String ids) {
         List<Integer> list = Arrays.stream(ids.split(",")).map(Integer::parseInt).toList();
         return autoBrandService.removeByIds(list)? Result.success() : Result.fail();

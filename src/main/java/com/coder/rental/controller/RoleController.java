@@ -6,6 +6,7 @@ import com.coder.rental.service.IPermissionService;
 import com.coder.rental.service.IRoleService;
 import com.coder.rental.utils.Result;
 import jakarta.annotation.Resource;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -30,22 +31,26 @@ public class RoleController {
     private IPermissionService permissionService;
 
     @PostMapping("/{start}/{size}")
+    @PreAuthorize("hasAuthority('sys:role:select')")
     public Result search(@PathVariable int start, @PathVariable int size, @RequestBody Role role){
         Page<Role> Page = new Page<>(start, size);
         return Result.success(roleService.selectList(Page, role));
     }
 
     @PutMapping
+    @PreAuthorize("hasAuthority('sys:role:edit')")
     public Result update(@RequestBody Role role){
         return roleService.updateById(role)? Result.success() : Result.fail();
     }
 
     @DeleteMapping("/{ids}")
+    @PreAuthorize("hasAuthority('sys:role:delete')")
     public Result delete(@PathVariable String ids){
         return roleService.delete(ids)? Result.success() : Result.fail();
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('sys:role:add')")
     public Result save(@RequestBody Role role){
         return roleService.save(role)? Result.success() : Result.fail();
     }
@@ -56,17 +61,20 @@ public class RoleController {
     }
 
     @GetMapping("/permissionTree")
+    @PreAuthorize("hasAuthority('sys:role:assignPermissions')")
     public Result selectPermissionTree(Integer userId,Integer roleId){
         return Result.success(permissionService.selectPermissionTree(userId,roleId));
     }
 
     @GetMapping("/{roleId}/{permissionIds}")
+    @PreAuthorize("hasAuthority('sys:role:assignPermissions')")
     public Result assignPermission(@PathVariable Integer roleId,@PathVariable String permissionIds){
         List<Integer> list = Arrays.stream(permissionIds.split(",")).map(Integer::parseInt).toList();
         return roleService.assignPermission(roleId,list)? Result.success() : Result.fail();
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('sys:user:bindRole')")
     public Result list(){
         return Result.success(roleService.list());
     }

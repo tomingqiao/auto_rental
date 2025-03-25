@@ -7,6 +7,7 @@ import com.coder.rental.service.IAutoInfoService;
 import com.coder.rental.utils.Result;
 import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -31,11 +32,13 @@ public class AutoInfoController {
     private IAutoInfoService autoInfoService;
 
     @PostMapping("/{start}/{size}")
+    @PreAuthorize("hasAuthority('auto:info:select')")
     public Result search(@PathVariable int start, @PathVariable int size, @RequestBody AutoInfo autoInfo){
         return Result.success(autoInfoService.search(start, size, autoInfo));
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('auto:info:add')")
     public Result save(@RequestBody AutoInfo autoInfo){
         int i = autoInfo.getMileage() / maintainMileage;
         autoInfo.setExpectedNum(i);
@@ -44,6 +47,7 @@ public class AutoInfoController {
     }
 
     @PutMapping
+    @PreAuthorize("hasAuthority('auto:info:edit')")
     public Result update(@RequestBody AutoInfo autoInfo){
         int i = autoInfo.getMileage() / maintainMileage;
         autoInfo.setExpectedNum(i);
@@ -52,6 +56,7 @@ public class AutoInfoController {
     }
 
     @DeleteMapping("/{ids}")
+    @PreAuthorize("hasAuthority('auto:info:delete')")
     public Result delete(@PathVariable String ids){
         return autoInfoService.delete(ids)?Result.success():Result.fail();
     }

@@ -5,6 +5,7 @@ import com.coder.rental.entity.Permission;
 import com.coder.rental.service.IPermissionService;
 import com.coder.rental.utils.Result;
 import jakarta.annotation.Resource;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -33,6 +34,7 @@ public class PermissionController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('sys:permission:add')")
     public Result save(@RequestBody Permission permission) {
         if(permission.getPermissionType()!=2){
             String routeUrl = permission.getRouteUrl();
@@ -43,6 +45,7 @@ public class PermissionController {
     }
 
     @PutMapping
+    @PreAuthorize("hasAuthority('sys:permission:edit')")
     public Result update(@RequestBody Permission permission) {
         if(permission.getPermissionType()!=2){
             String routeUrl = permission.getRouteUrl();
@@ -53,6 +56,7 @@ public class PermissionController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('sys:permission:delete')")
     public Result delete(@PathVariable Integer id) {
         return permissionService.removeById(id) ? Result.success() : Result.fail();
     }

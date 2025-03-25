@@ -6,6 +6,7 @@ import com.coder.rental.service.IAutoMakerService;
 import com.coder.rental.utils.PinYinUtils;
 import com.coder.rental.utils.Result;
 import jakarta.annotation.Resource;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -28,6 +29,7 @@ public class AutoMakerController {
 
     //分页查询
     @PostMapping("/{start}/{size}")
+    @PreAuthorize("hasAuthority('auto:maker:select')")
     public Result search(@PathVariable int start, @PathVariable int size,
                          @RequestBody AutoMaker autoMaker) {
         Page<AutoMaker> page = autoMakerService.search(start, size, autoMaker);
@@ -36,18 +38,21 @@ public class AutoMakerController {
 
 
     @DeleteMapping("/{ids}")
+    @PreAuthorize("hasAuthority('auto:maker:delete')")
     public Result delete(@PathVariable String ids) {
         List<Integer> list = Arrays.stream(ids.split(",")).map(Integer::parseInt).toList();
         return autoMakerService.removeByIds(list)? Result.success() : Result.fail();
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('auto:maker:add')")
     public Result save(@RequestBody AutoMaker autoMaker) {
         autoMaker.setOrderLetter(PinYinUtils.getPinYin(autoMaker.getName()));
         return autoMakerService.save(autoMaker)? Result.success() : Result.fail();
     }
 
     @PutMapping
+    @PreAuthorize("hasAuthority('auto:maker:edit')")
     public Result update(@RequestBody AutoMaker autoMaker) {
         autoMaker.setOrderLetter(PinYinUtils.getPinYin(autoMaker.getName()));
         return autoMakerService.updateById(autoMaker)? Result.success() : Result.fail();

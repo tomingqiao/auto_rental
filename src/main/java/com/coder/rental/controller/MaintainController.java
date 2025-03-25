@@ -7,6 +7,7 @@ import com.coder.rental.service.IAutoInfoService;
 import com.coder.rental.service.IMaintainService;
 import com.coder.rental.utils.Result;
 import jakarta.annotation.Resource;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -28,11 +29,13 @@ public class MaintainController {
     private IAutoInfoService autoInfoService;
 
     @PostMapping("/{start}/{size}")
+    @PreAuthorize("hasAuthority('busi:maintain:select')")
     public Result search(@PathVariable int start, @PathVariable int size, @RequestBody Maintain maintain){
         Page<Maintain> page = new Page<>(start, size);
         return Result.success(maintainService.search(page, maintain));
     }
     @PostMapping
+    @PreAuthorize("hasAuthority('busi:maintain:add')")
     public Result save(@RequestBody Maintain maintain){
         AutoInfo auto = autoInfoService.getByAutoNum(maintain.getAutoNum());
         maintain.setAutoId(auto.getId());
@@ -42,6 +45,7 @@ public class MaintainController {
     }
 
     @PutMapping
+    @PreAuthorize("hasAuthority('busi:maintain:edit')")
     public Result update(@RequestBody Maintain maintain){
         AutoInfo auto = autoInfoService.getByAutoNum(maintain.getAutoNum());
         maintain.setAutoId(auto.getId());
@@ -49,6 +53,7 @@ public class MaintainController {
     }
 
     @DeleteMapping("/{ids}")
+    @PreAuthorize("hasAuthority('busi:maintain:delete')")
     public Result delete(@PathVariable String ids){
         return maintainService.delete(ids)?Result.success():Result.fail();
     }
