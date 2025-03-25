@@ -69,6 +69,7 @@ public class AutoBrandController {
     }
 
     @GetMapping("exportExcel")
+    @PreAuthorize("hasAuthority('auto:brand:export')")
     public Result exportExcel(HttpServletResponse response) throws IOException {
         List<AutoBrand> list = autoBrandService.list();
         ExcelWriter writer = ExcelUtil.getWriter(true);
@@ -76,7 +77,7 @@ public class AutoBrandController {
         writer.addHeaderAlias("deleted", "是否删除");
         writer.write(list, true);
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
-        String fileName = URLEncoder.encode("品牌信息表", StandardCharsets.UTF_8);
+        String fileName = URLEncoder.encode("汽车品牌信息表", StandardCharsets.UTF_8);
         response.setHeader("Content-Disposition","attachment;filename=test"+fileName+".xlsx");
         ServletOutputStream out=response.getOutputStream();
         writer.flush(out, true);
