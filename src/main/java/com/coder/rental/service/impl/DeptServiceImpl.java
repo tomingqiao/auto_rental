@@ -28,7 +28,12 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
         queryWrapper.like(StrUtil.isNotEmpty(dept.getDeptName()),"dept_name",dept.getDeptName());
         queryWrapper.orderByAsc("order_num");
         List<Dept> depts = baseMapper.selectList(queryWrapper);
-        return DeptTreeUtils.buildTree(depts,0);
+        List<Dept> deptTree = DeptTreeUtils.buildTree(depts, 0);
+        if(!deptTree.isEmpty()){
+            return deptTree;
+        }else {
+            return depts;
+        }
     }
 
     @Override
