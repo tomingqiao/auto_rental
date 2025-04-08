@@ -21,6 +21,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>
@@ -68,7 +69,8 @@ public class UserController {
     @PutMapping
     @PreAuthorize("hasAuthority('sys:user:edit')")
     public Result update(@RequestBody User user){
-        if(userService.selectByUsername(user.getUsername())!=null){
+        User user1=userService.selectByUsername(user.getUsername());
+        if(user1 != null &&!Objects.equals(user1.getId(), user.getId())){
             return Result.fail().setMessage("用户名已存在");
         }else {
             return userService.updateById(user)?Result.success():Result.fail();
