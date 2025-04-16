@@ -8,7 +8,7 @@
         INNER JOIN auto_maker am ON ai.maker_id = am.id AND am.deleted = 0
         INNER JOIN auto_brand ab ON ai.brand_id = ab.id AND ab.deleted = 0
         where ai.deleted=0
-        <if test="autoInfo.autoNum!=null and autoNum!=''">
+        <if test="autoInfo.autoNum!=null and autoInfo.autoNum!=''">
             and ai.auto_num like concat('%',#{autoInfo.autoNum},'%')
         </if>
         <if test="autoInfo.makerId!=null">
